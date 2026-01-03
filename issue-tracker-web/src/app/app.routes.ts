@@ -3,6 +3,7 @@ import { LayoutComponent } from './components/layout/layout.component';
 import { ProjectComponent } from './components/project/project.component';
 import { IssueComponent } from './components/issue/issue.component';
 import { LoginComponent } from './components/login/login.component';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -10,6 +11,7 @@ export const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
+    canActivate: [authGuard],
     children: [
       { path: 'projects', component: ProjectComponent },
       { path: 'issues', component: IssueComponent },
