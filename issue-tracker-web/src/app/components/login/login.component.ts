@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { AuthService } from '../../services/auth.service';
+
 
 @Component({
   selector: 'app-login',
@@ -28,18 +30,19 @@ export class LoginComponent {
 
   constructor(
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
-  submit(): void {
-    if (this.loginForm.invalid) {
-      return;
-    }
-
-    // Placeholder: replace with AuthService later
-    console.log('Login form submitted', this.loginForm.value);
-
-    // Temporary navigation to app
-    this.router.navigate(['/projects']);
+submit(): void {
+  if (this.loginForm.invalid) {
+    return;
   }
+
+  const { email, password } = this.loginForm.value;
+
+  this.authService.login(email!, password!);
+  this.router.navigate(['/projects']);
+}
+
 }
