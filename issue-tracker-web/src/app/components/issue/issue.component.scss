@@ -1,0 +1,20 @@
+.issue-table-container {
+  padding: 16px;
+}
+
+.filter-field {
+  width: 350px;
+  margin-bottom: 16px;
+}
+
+table {
+  width: 100%;
+}
+
+.clickable-table tr.mat-row {
+  cursor: pointer;
+}
+
+.clickable-table tr.mat-row:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}

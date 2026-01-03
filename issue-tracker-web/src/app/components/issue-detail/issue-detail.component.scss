@@ -1,0 +1,27 @@
+.issue-detail-container {
+  padding: 24px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.issue-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.issue-section {
+  margin-bottom: 16px;
+}
+
+.placeholder {
+  color: rgba(0, 0, 0, 0.54);
+  font-style: italic;
+}

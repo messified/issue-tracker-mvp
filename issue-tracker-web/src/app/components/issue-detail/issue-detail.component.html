@@ -1,0 +1,53 @@
+<div class="issue-detail-container">
+
+  <!-- Header -->
+  <div class="issue-header">
+    <div class="header-left">
+        <button
+        mat-button
+        color="primary"
+        (click)="goBackToList()"
+        >
+        ← Back to Issues
+        </button>
+
+        <h2>Issue #{{ issueId }}</h2>
+    </div>
+
+    <button mat-raised-button color="primary">
+      Edit Issue
+    </button>
+  </div>
+
+  <!-- Issue Summary -->
+  <mat-card class="issue-section">
+    <mat-card-title>Details</mat-card-title>
+    <mat-card-content>
+      <p><strong>Title:</strong> Fix login redirect bug</p>
+      <p><strong>Status:</strong> Open</p>
+      <p><strong>Priority:</strong> High</p>
+      <p><strong>Assignee:</strong> User #42</p>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Activity Log Placeholder -->
+  <mat-card class="issue-section">
+    <mat-card-title>Activity</mat-card-title>
+    <mat-card-content>
+      <p class="placeholder">
+        Activity log will appear here.
+      </p>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Comments Placeholder -->
+  <mat-card class="issue-section">
+    <mat-card-title>Comments</mat-card-title>
+    <mat-card-content>
+      <p class="placeholder">
+        Comment thread will appear here.
+      </p>
+    </mat-card-content>
+  </mat-card>
+
+</div>
