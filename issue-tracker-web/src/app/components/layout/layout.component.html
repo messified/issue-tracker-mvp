@@ -1,0 +1,44 @@
+<mat-sidenav-container class="layout-container">
+
+  <!-- Sidebar -->
+  <mat-sidenav
+    mode="side"
+    opened
+    class="layout-sidenav"
+  >
+    <h3 class="sidenav-title">Issue Tracker</h3>
+
+    <mat-nav-list>
+      <a mat-list-item routerLink="/projects" routerLinkActive="active">
+        <mat-icon>folder</mat-icon>
+        <span>Projects</span>
+      </a>
+
+      <a mat-list-item routerLink="/issues" routerLinkActive="active">
+        <mat-icon>bug_report</mat-icon>
+        <span>Issues</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <!-- Main Content -->
+  <mat-sidenav-content>
+
+    <!-- Top Bar -->
+    <mat-toolbar color="primary" class="layout-toolbar">
+      <span class="app-title">Issue Tracker</span>
+
+      <span class="spacer"></span>
+
+      <mat-icon>account_circle</mat-icon>
+      <span class="active-user">Active User</span>
+    </mat-toolbar>
+
+    <!-- Routed View -->
+    <div class="layout-content">
+      <router-outlet></router-outlet>
+    </div>
+
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

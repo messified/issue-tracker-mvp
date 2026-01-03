@@ -1,0 +1,36 @@
+.layout-container {
+  height: 100vh;
+}
+
+.layout-sidenav {
+  width: 220px;
+  padding-top: 8px;
+}
+
+.sidenav-title {
+  padding: 16px;
+  margin: 0;
+  font-weight: 500;
+}
+
+.layout-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.layout-content {
+  padding: 16px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.active-user {
+  margin-left: 8px;
+}
+
+a.active {
+  background: rgba(0, 0, 0, 0.08);
+}
