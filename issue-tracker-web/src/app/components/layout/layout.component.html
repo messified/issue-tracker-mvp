@@ -26,12 +26,20 @@
 
     <!-- Top Bar -->
     <mat-toolbar color="primary" class="layout-toolbar">
-      <span class="app-title">Issue Tracker</span>
+        <span class="app-title">Issue Tracker</span>
 
-      <span class="spacer"></span>
+        <span class="spacer"></span>
 
-      <mat-icon>account_circle</mat-icon>
-      <span class="active-user">Active User</span>
+        <mat-icon>account_circle</mat-icon>
+        <span class="active-user">Active User</span>
+
+        <button
+            mat-button
+            (click)="logout()"
+            class="logout-button"
+        >
+            Logout
+        </button>
     </mat-toolbar>
 
     <!-- Routed View -->
