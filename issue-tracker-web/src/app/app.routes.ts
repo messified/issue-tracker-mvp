@@ -1,9 +1,12 @@
 import { Routes } from '@angular/router';
+import { LayoutComponent } from './components/layout/layout.component';
 import { ProjectComponent } from './components/project/project.component';
 import { IssueComponent } from './components/issue/issue.component';
-import { LayoutComponent } from './components/layout/layout.component';
+import { LoginComponent } from './components/login/login.component';
 
 export const routes: Routes = [
+  { path: 'login', component: LoginComponent },
+
   {
     path: '',
     component: LayoutComponent,
@@ -19,5 +22,6 @@ export const routes: Routes = [
       { path: '', redirectTo: 'projects', pathMatch: 'full' }
     ]
   },
-  { path: '**', redirectTo: '' }
+
+  { path: '**', redirectTo: 'login' }
 ];
