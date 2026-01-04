@@ -3,67 +3,96 @@
   <!-- Header -->
   <div class="issue-header">
     <div class="header-left">
-      <button
-        mat-button
-        color="primary"
-        (click)="goBackToList()"
-      >
+      <button mat-button color="primary" (click)="goBackToList()">
         ← Back to Issues
       </button>
-
       <h2 *ngIf="issue">Issue #{{ issue.id }}</h2>
     </div>
 
     <button
       mat-raised-button
       color="primary"
-      disabled
+      *ngIf="!editing"
+      (click)="startEdit()"
     >
       Edit Issue
     </button>
   </div>
 
-  <!-- Loading State -->
   <p *ngIf="loading">Loading issue...</p>
 
-  <!-- Issue Details -->
   <ng-container *ngIf="!loading && issue">
 
-    <mat-card class="issue-section">
-      <mat-card-title>Details</mat-card-title>
-      <mat-card-content>
-        <p><strong>Title:</strong> {{ issue.title }}</p>
-        <p><strong>Status:</strong> {{ issue.status }}</p>
-        <p><strong>Priority:</strong> {{ issue.priority }}</p>
-        <p><strong>Assignee:</strong> {{ issue.assigneeId ?? '—' }}</p>
-        <p><strong>Updated:</strong> {{ issue.updatedAt }}</p>
-      </mat-card-content>
-    </mat-card>
+    <!-- VIEW MODE -->
+    <ng-container *ngIf="!editing">
+      <mat-card class="issue-section">
+        <mat-card-title>Details</mat-card-title>
+        <mat-card-content>
+          <p><strong>Title:</strong> {{ issue.title }}</p>
+          <p><strong>Status:</strong> {{ issue.status }}</p>
+          <p><strong>Priority:</strong> {{ issue.priority }}</p>
+          <p><strong>Assignee:</strong> {{ issue.assigneeId ?? '—' }}</p>
+          <p><strong>Updated:</strong> {{ issue.updatedAt }}</p>
+        </mat-card-content>
+      </mat-card>
 
-    <mat-card class="issue-section">
-      <mat-card-title>Description</mat-card-title>
-      <mat-card-content>
-        <p>{{ issue.description || 'No description provided.' }}</p>
-      </mat-card-content>
-    </mat-card>
+      <mat-card class="issue-section">
+        <mat-card-title>Description</mat-card-title>
+        <mat-card-content>
+          <p>{{ issue.description || 'No description provided.' }}</p>
+        </mat-card-content>
+      </mat-card>
+    </ng-container>
 
-    <mat-card class="issue-section">
-      <mat-card-title>Activity</mat-card-title>
-      <mat-card-content>
-        <p class="placeholder">
-          Activity log will appear here.
-        </p>
-      </mat-card-content>
-    </mat-card>
+    <!-- EDIT MODE -->
+    <form *ngIf="editing" [formGroup]="form">
+      <mat-card class="issue-section">
+        <mat-card-title>Edit Issue</mat-card-title>
+        <mat-card-content>
 
-    <mat-card class="issue-section">
-      <mat-card-title>Comments</mat-card-title>
-      <mat-card-content>
-        <p class="placeholder">
-          Comment thread will appear here.
-        </p>
-      </mat-card-content>
-    </mat-card>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Title</mat-label>
+            <input matInput formControlName="title" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Description</mat-label>
+            <textarea matInput rows="4" formControlName="description"></textarea>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status">
+              <mat-option *ngFor="let s of statuses" [value]="s">
+                {{ s }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Priority</mat-label>
+            <input matInput type="number" formControlName="priority" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Assignee ID</mat-label>
+            <input matInput type="number" formControlName="assigneeId" />
+          </mat-form-field>
+
+          <div class="edit-actions">
+            <button mat-button (click)="cancelEdit()">Cancel</button>
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="save()"
+            >
+              Save
+            </button>
+          </div>
+
+        </mat-card-content>
+      </mat-card>
+    </form>
 
   </ng-container>
 
