@@ -6,9 +6,11 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { IssueService } from '../../services/issue.service';
 import { Issue, IssueStatus } from '../../models/issue.model';
+import { ActivityEntry } from '../../models/activity.model';
 
 @Component({
   selector: 'app-issue-detail',
@@ -19,7 +21,8 @@ import { Issue, IssueStatus } from '../../models/issue.model';
     MatCardModule,
     MatButtonModule,
     MatInputModule,
-    MatSelectModule
+    MatSelectModule,
+    MatSnackBarModule
   ],
   templateUrl: './issue-detail.component.html',
   styleUrl: './issue-detail.component.scss'
@@ -33,6 +36,8 @@ export class IssueDetailComponent implements OnInit {
 
   readonly statuses: IssueStatus[] = ['Open', 'InProgress', 'Closed'];
 
+  activities: ActivityEntry[] = [];
+
   form = this.fb.nonNullable.group({
     title: ['', Validators.required],
     description: [''],
@@ -45,7 +50,8 @@ export class IssueDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private issueService: IssueService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -59,6 +65,12 @@ export class IssueDetailComponent implements OnInit {
         this.issue = issue;
         this.form.patchValue(issue);
         this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
+        this.snackBar.open('Failed to load issue', 'Dismiss', {
+          duration: 3000
+        });
       }
     });
   }
@@ -74,27 +86,42 @@ export class IssueDetailComponent implements OnInit {
     this.editing = false;
   }
 
-save(): void {
-  if (this.form.invalid || !this.issue) {
-    return;
-  }
+  save(): void {
+    if (this.form.invalid || !this.issue) {
+      return;
+    }
 
-  const raw = this.form.getRawValue();
+    const raw = this.form.getRawValue();
 
-  const payload = {
-    ...raw,
-    assigneeId: raw.assigneeId ?? undefined
-  };
+    const payload = {
+      ...raw,
+      assigneeId: raw.assigneeId ?? undefined
+    };
 
-  this.issueService
-    .updateIssue(this.issueId, payload)
-    .subscribe({
+    this.issueService.updateIssue(this.issueId, payload).subscribe({
       next: updated => {
         this.issue = updated;
         this.editing = false;
+
+        this.addActivity('Issue updated');
+        this.snackBar.open('Issue saved successfully', 'Dismiss', {
+          duration: 3000
+        });
+      },
+      error: () => {
+        this.snackBar.open('Failed to save issue', 'Dismiss', {
+          duration: 3000
+        });
       }
     });
-}
+  }
+
+  addActivity(message: string): void {
+    this.activities.unshift({
+      timestamp: new Date().toISOString(),
+      message
+    });
+  }
 
   goBackToList(): void {
     this.router.navigate(['/issues']);

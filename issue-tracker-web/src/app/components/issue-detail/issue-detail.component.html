@@ -25,6 +25,24 @@
 
     <!-- VIEW MODE -->
     <ng-container *ngIf="!editing">
+    <mat-card class="issue-section">
+        <mat-card-title>Activity</mat-card-title>
+        <mat-card-content>
+            <p *ngIf="activities.length === 0" class="placeholder">
+            No activity yet.
+            </p>
+
+            <ul *ngIf="activities.length > 0" class="activity-list">
+            <li *ngFor="let activity of activities">
+                <span class="timestamp">
+                {{ activity.timestamp | date:'short' }}
+                </span>
+                — {{ activity.message }}
+            </li>
+            </ul>
+        </mat-card-content>
+    </mat-card>
+
       <mat-card class="issue-section">
         <mat-card-title>Details</mat-card-title>
         <mat-card-content>

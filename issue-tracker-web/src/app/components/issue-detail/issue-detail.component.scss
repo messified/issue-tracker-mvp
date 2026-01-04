@@ -36,3 +36,17 @@
   justify-content: flex-end;
   gap: 12px;
 }
+
+.activity-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.activity-list li {
+  margin-bottom: 8px;
+}
+
+.timestamp {
+  color: rgba(0, 0, 0, 0.54);
+  font-size: 12px;
+}
