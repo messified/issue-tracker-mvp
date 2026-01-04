@@ -3,51 +3,68 @@
   <!-- Header -->
   <div class="issue-header">
     <div class="header-left">
-        <button
+      <button
         mat-button
         color="primary"
         (click)="goBackToList()"
-        >
+      >
         ← Back to Issues
-        </button>
+      </button>
 
-        <h2>Issue #{{ issueId }}</h2>
+      <h2 *ngIf="issue">Issue #{{ issue.id }}</h2>
     </div>
 
-    <button mat-raised-button color="primary">
+    <button
+      mat-raised-button
+      color="primary"
+      disabled
+    >
       Edit Issue
     </button>
   </div>
 
-  <!-- Issue Summary -->
-  <mat-card class="issue-section">
-    <mat-card-title>Details</mat-card-title>
-    <mat-card-content>
-      <p><strong>Title:</strong> Fix login redirect bug</p>
-      <p><strong>Status:</strong> Open</p>
-      <p><strong>Priority:</strong> High</p>
-      <p><strong>Assignee:</strong> User #42</p>
-    </mat-card-content>
-  </mat-card>
+  <!-- Loading State -->
+  <p *ngIf="loading">Loading issue...</p>
 
-  <!-- Activity Log Placeholder -->
-  <mat-card class="issue-section">
-    <mat-card-title>Activity</mat-card-title>
-    <mat-card-content>
-      <p class="placeholder">
-        Activity log will appear here.
-      </p>
-    </mat-card-content>
-  </mat-card>
+  <!-- Issue Details -->
+  <ng-container *ngIf="!loading && issue">
 
-  <!-- Comments Placeholder -->
-  <mat-card class="issue-section">
-    <mat-card-title>Comments</mat-card-title>
-    <mat-card-content>
-      <p class="placeholder">
-        Comment thread will appear here.
-      </p>
-    </mat-card-content>
-  </mat-card>
+    <mat-card class="issue-section">
+      <mat-card-title>Details</mat-card-title>
+      <mat-card-content>
+        <p><strong>Title:</strong> {{ issue.title }}</p>
+        <p><strong>Status:</strong> {{ issue.status }}</p>
+        <p><strong>Priority:</strong> {{ issue.priority }}</p>
+        <p><strong>Assignee:</strong> {{ issue.assigneeId ?? '—' }}</p>
+        <p><strong>Updated:</strong> {{ issue.updatedAt }}</p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="issue-section">
+      <mat-card-title>Description</mat-card-title>
+      <mat-card-content>
+        <p>{{ issue.description || 'No description provided.' }}</p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="issue-section">
+      <mat-card-title>Activity</mat-card-title>
+      <mat-card-content>
+        <p class="placeholder">
+          Activity log will appear here.
+        </p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="issue-section">
+      <mat-card-title>Comments</mat-card-title>
+      <mat-card-content>
+        <p class="placeholder">
+          Comment thread will appear here.
+        </p>
+      </mat-card-content>
+    </mat-card>
+
+  </ng-container>
 
 </div>
