@@ -8,7 +8,7 @@ import { Project } from '../models/project.model';
 })
 export class ProjectService {
 
-  private readonly baseUrl = '/api/projects';
+  private readonly baseUrl = 'http://localhost:8080/api/projects';
 
   constructor(private http: HttpClient) {}
 

@@ -1,15 +1,12 @@
-import { Component, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatInputModule } from '@angular/material/input';
 
-export interface Project {
-  id: number;
-  name: string;
-  ownerId: number;
-}
+import { ProjectService } from '../../services/project.service';
+import { Project } from '../../models/project.model';
 
 @Component({
   selector: 'app-project',
@@ -24,24 +21,37 @@ export interface Project {
   templateUrl: './project.component.html',
   styleUrl: './project.component.scss'
 })
-export class ProjectComponent implements AfterViewInit {
+export class ProjectComponent implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['id', 'name', 'ownerId'];
-  dataSource = new MatTableDataSource<Project>([
-    { id: 1, name: 'Internal Tools', ownerId: 10 },
-    { id: 2, name: 'Issue Tracker', ownerId: 10 },
-    { id: 3, name: 'Website Redesign', ownerId: 22 }
-  ]);
+  displayedColumns = ['id', 'name', 'ownerId'];
+  dataSource = new MatTableDataSource<Project>([]);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+  constructor(private projectService: ProjectService) {}
+
+  ngOnInit(): void {
+    this.loadProjects();
   }
 
-  applyFilter(event: Event) {
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+
+    this.dataSource.filterPredicate = (project, filter) =>
+      project.name.toLowerCase().includes(filter);
+  }
+
+  loadProjects(): void {
+    this.projectService.getProjects().subscribe({
+      next: projects => {
+        this.dataSource.data = projects;
+      }
+    });
+  }
+
+  applyFilter(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
     this.dataSource.filter = value.trim().toLowerCase();
   }

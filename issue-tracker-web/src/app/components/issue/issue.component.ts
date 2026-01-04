@@ -1,22 +1,13 @@
-import { Component, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatInputModule } from '@angular/material/input';
 
-export type IssueStatus = 'Open' | 'InProgress' | 'Closed';
-
-export interface Issue {
-  id: number;
-  projectId: number;
-  title: string;
-  status: IssueStatus;
-  priority: number;
-  assigneeId?: number;
-  updatedAt: string;
-}
+import { IssueService } from '../../services/issue.service';
+import { Issue, IssueStatus } from '../../models/issue.model';
 
 @Component({
   selector: 'app-issue',
@@ -31,7 +22,7 @@ export interface Issue {
   templateUrl: './issue.component.html',
   styleUrl: './issue.component.scss'
 })
-export class IssueComponent implements AfterViewInit {
+export class IssueComponent implements OnInit, AfterViewInit {
 
   displayedColumns = [
     'id',
@@ -42,45 +33,25 @@ export class IssueComponent implements AfterViewInit {
     'updatedAt'
   ];
 
-  dataSource = new MatTableDataSource<Issue>([
-    {
-      id: 101,
-      projectId: 1,
-      title: 'Fix login redirect bug',
-      status: 'Open',
-      priority: 1,
-      assigneeId: 42,
-      updatedAt: '2026-01-01'
-    },
-    {
-      id: 102,
-      projectId: 1,
-      title: 'Add pagination to issue list',
-      status: 'InProgress',
-      priority: 2,
-      assigneeId: 42,
-      updatedAt: '2026-01-02'
-    },
-    {
-      id: 103,
-      projectId: 2,
-      title: 'Refactor API error handling',
-      status: 'Closed',
-      priority: 3,
-      updatedAt: '2025-12-30'
-    }
-  ]);
+  dataSource = new MatTableDataSource<Issue>([]);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private router: Router) {}
+  constructor(
+    private issueService: IssueService,
+    private router: Router
+  ) {}
 
-  ngAfterViewInit() {
+  ngOnInit(): void {
+    this.loadIssues();
+  }
+
+  ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
-    // Custom filter to support text search across multiple fields
+    // Client-side text search (until server-side paging)
     this.dataSource.filterPredicate = (issue, filter) => {
       const value = filter.toLowerCase();
       return (
@@ -91,12 +62,20 @@ export class IssueComponent implements AfterViewInit {
     };
   }
 
-  applyFilter(event: Event) {
+  loadIssues(): void {
+    this.issueService.getIssues().subscribe({
+      next: issues => {
+        this.dataSource.data = issues;
+      }
+    });
+  }
+
+  applyFilter(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
     this.dataSource.filter = value.trim().toLowerCase();
   }
 
-  goToIssue(issue: Issue) {
+  goToIssue(issue: Issue): void {
     this.router.navigate(['/issues', issue.id]);
   }
 }
