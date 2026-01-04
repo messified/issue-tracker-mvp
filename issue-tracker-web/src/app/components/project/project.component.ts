@@ -9,17 +9,16 @@ import { ProjectService } from '../../services/project.service';
 import { Project } from '../../models/project.model';
 
 @Component({
-  selector: 'app-project',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatInputModule
-  ],
-  templateUrl: './project.component.html',
-  styleUrl: './project.component.scss'
+    selector: 'app-project',
+    imports: [
+        CommonModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatInputModule
+    ],
+    templateUrl: './project.component.html',
+    styleUrl: './project.component.scss'
 })
 export class ProjectComponent implements OnInit, AfterViewInit {
 

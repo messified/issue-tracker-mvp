@@ -13,19 +13,18 @@ import { Issue, IssueStatus } from '../../models/issue.model';
 import { ActivityEntry } from '../../models/activity.model';
 
 @Component({
-  selector: 'app-issue-detail',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatCardModule,
-    MatButtonModule,
-    MatInputModule,
-    MatSelectModule,
-    MatSnackBarModule
-  ],
-  templateUrl: './issue-detail.component.html',
-  styleUrl: './issue-detail.component.scss'
+    selector: 'app-issue-detail',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatCardModule,
+        MatButtonModule,
+        MatInputModule,
+        MatSelectModule,
+        MatSnackBarModule
+    ],
+    templateUrl: './issue-detail.component.html',
+    styleUrl: './issue-detail.component.scss'
 })
 export class IssueDetailComponent implements OnInit {
 

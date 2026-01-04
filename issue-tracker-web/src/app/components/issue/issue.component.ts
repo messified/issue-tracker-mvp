@@ -10,17 +10,16 @@ import { IssueService } from '../../services/issue.service';
 import { Issue, IssueStatus } from '../../models/issue.model';
 
 @Component({
-  selector: 'app-issue',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatInputModule
-  ],
-  templateUrl: './issue.component.html',
-  styleUrl: './issue.component.scss'
+    selector: 'app-issue',
+    imports: [
+        CommonModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatInputModule
+    ],
+    templateUrl: './issue.component.html',
+    styleUrl: './issue.component.scss'
 })
 export class IssueComponent implements OnInit, AfterViewInit {
 

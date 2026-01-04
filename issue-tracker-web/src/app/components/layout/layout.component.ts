@@ -9,19 +9,18 @@ import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
-  selector: 'app-layout',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    MatSidenavModule,
-    MatToolbarModule,
-    MatListModule,
-    MatIconModule,
-    MatButtonModule
-  ],
-  templateUrl: './layout.component.html',
-  styleUrl: './layout.component.scss'
+    selector: 'app-layout',
+    imports: [
+        CommonModule,
+        RouterModule,
+        MatSidenavModule,
+        MatToolbarModule,
+        MatListModule,
+        MatIconModule,
+        MatButtonModule
+    ],
+    templateUrl: './layout.component.html',
+    styleUrl: './layout.component.scss'
 })
 export class LayoutComponent {
 
