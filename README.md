@@ -45,32 +45,48 @@ The project is intentionally not complete and not production-ready.
 │       │   └── bootstrap
 │       └── test-classes
 │           └── com
-└── issue-tracker-web # Angular frontend
-    ├── README.md
-    ├── angular.json
-    ├── package-lock.json
-    ├── package.json
-    ├── src
-    │   ├── app
-    │   │   ├── app.component.html
-    │   │   ├── app.component.scss
-    │   │   ├── app.component.spec.ts
-    │   │   ├── app.component.ts
-    │   │   ├── app.config.ts
-    │   │   ├── app.routes.ts
-    │   │   ├── components
-    │   │   ├── guards
-    │   │   ├── interceptors
-    │   │   ├── models
-    │   │   └── services
-    │   ├── assets
-    │   ├── favicon.ico
-    │   ├── index.html
-    │   ├── main.ts
-    │   └── styles.scss
-    ├── tsconfig.app.json
-    ├── tsconfig.json
-    └── tsconfig.spec.json
+├── issue-tracker-web # Angular frontend
+│   ├── app
+│   ├── app.component.html
+│   ├── app.component.scss
+│   ├── app.component.spec.ts
+│   ├── app.component.ts
+│   ├── app.config.ts
+│   ├── app.routes.ts
+│   ├── components
+│   │   ├── create-issue-dialog
+│   │   ├── issue
+│   │   ├── issue-detail
+│   │   ├── layout
+│   │   ├── login
+│   │   └── project
+│   ├── guards
+│   │   ├── auth.guard.spec.ts
+│   │   └── auth.guard.ts
+│   ├── interceptors
+│   │   ├── auth.interceptor.spec.ts
+│   │   └── auth.interceptor.ts
+│   ├── models
+│   │   ├── activity.model.ts
+│   │   ├── issue.model.ts
+│   │   ├── pagination.model.ts
+│   │   ├── project.model.ts
+│   │   └── websocket.model.ts
+│   └── services
+│       ├── auth.service.spec.ts
+│       ├── auth.service.ts
+│       ├── issue.service.spec.ts
+│       ├── issue.service.ts
+│       ├── project.service.spec.ts
+│       ├── project.service.ts
+│       └── websocket.service.ts
+├── assets
+├── environments
+│   └── environment.ts
+├── favicon.ico
+├── index.html
+├── main.ts
+└── styles.scss
 ```
 
 ---
