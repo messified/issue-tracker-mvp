@@ -1,0 +1,357 @@
+:host {
+  display: block;
+}
+
+// Dialog Title
+h2[mat-dialog-title] {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  padding: 24px 24px 16px;
+  font-size: 24px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.87);
+
+  .title-icon {
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+    color: #1976d2;
+  }
+}
+
+// Dialog Content
+mat-dialog-content {
+  padding: 0 24px 24px;
+  max-height: 70vh;
+  overflow-y: auto;
+
+  // Custom scrollbar
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f5f5f5;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+
+    &:hover {
+      background: #999;
+    }
+  }
+}
+
+// Form
+.issue-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 500px;
+
+  @media (max-width: 768px) {
+    min-width: 100%;
+  }
+}
+
+.full-width {
+  width: 100%;
+}
+
+// Priority Options
+.priority-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  span {
+    font-size: 14px;
+  }
+
+  // Priority colors
+  &[data-priority="low"] {
+    color: #757575;
+    
+    mat-icon {
+      color: #757575;
+    }
+  }
+
+  &[data-priority="medium"] {
+    color: #f57c00;
+    
+    mat-icon {
+      color: #f57c00;
+    }
+  }
+
+  &[data-priority="high"] {
+    color: #e65100;
+    
+    mat-icon {
+      color: #e65100;
+    }
+  }
+
+  &[data-priority="critical"] {
+    color: #c62828;
+    
+    mat-icon {
+      color: #c62828;
+    }
+  }
+}
+
+// Chip Grid Styling
+mat-chip-grid {
+  margin: 8px 0;
+}
+
+mat-chip-row {
+  font-size: 12px;
+  min-height: 28px;
+  padding: 4px 12px;
+  background-color: #e3f2fd;
+  color: #1976d2;
+
+  button[matChipRemove] {
+    opacity: 0.7;
+    transition: opacity 0.2s;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+
+// Info Box
+.info-box {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  background-color: #e3f2fd;
+  border-radius: 8px;
+  border-left: 4px solid #1976d2;
+  margin-top: 8px;
+
+  mat-icon {
+    flex-shrink: 0;
+    color: #1976d2;
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+  }
+
+  .info-content {
+    flex: 1;
+
+    strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #1976d2;
+      font-size: 14px;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 20px;
+      list-style-type: disc;
+
+      li {
+        font-size: 13px;
+        color: rgba(0, 0, 0, 0.7);
+        margin-bottom: 4px;
+        line-height: 1.5;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}
+
+// Dialog Actions
+mat-dialog-actions {
+  padding: 16px 24px;
+  margin: 0;
+  border-top: 1px solid #e0e0e0;
+
+  button {
+    min-width: 100px;
+
+    &.create-button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      mat-spinner {
+        display: inline-block;
+      }
+
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+}
+
+// Form Field Icon Prefixes
+mat-form-field {
+  mat-icon[matPrefix] {
+    margin-right: 8px;
+    color: rgba(0, 0, 0, 0.54);
+  }
+}
+
+// Character Counter Hint
+mat-hint {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.6);
+  
+  &[align="end"] {
+    text-align: right;
+  }
+}
+
+// Error State
+mat-error {
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+// Disabled State
+button[disabled] {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+// Loading State
+mat-spinner {
+  display: inline-block;
+  margin: 0;
+
+  ::ng-deep circle {
+    stroke: white;
+  }
+}
+
+// Animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+:host {
+  animation: fadeIn 0.3s ease-out;
+}
+
+// Focus States
+mat-form-field.mat-focused {
+  mat-icon[matPrefix] {
+    color: #1976d2;
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  h2[mat-dialog-title] {
+    font-size: 20px;
+    padding: 20px 16px 12px;
+
+    .title-icon {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  mat-dialog-content {
+    padding: 0 16px 16px;
+  }
+
+  .issue-form {
+    gap: 16px;
+  }
+
+  mat-dialog-actions {
+    padding: 12px 16px;
+    flex-direction: column-reverse;
+    gap: 8px;
+
+    button {
+      width: 100%;
+    }
+  }
+
+  .info-box {
+    padding: 12px;
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    .info-content {
+      strong {
+        font-size: 13px;
+      }
+
+      ul li {
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+// Dark Mode Support (if needed)
+@media (prefers-color-scheme: dark) {
+  h2[mat-dialog-title] {
+    color: rgba(255, 255, 255, 0.87);
+  }
+
+  .info-box {
+    background-color: rgba(25, 118, 210, 0.1);
+    border-left-color: #42a5f5;
+
+    mat-icon,
+    strong {
+      color: #42a5f5;
+    }
+
+    ul li {
+      color: rgba(255, 255, 255, 0.7);
+    }
+  }
+
+  mat-dialog-actions {
+    border-top-color: rgba(255, 255, 255, 0.12);
+  }
+}

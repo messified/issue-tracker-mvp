@@ -1,52 +1,525 @@
+// issue-detail.component.scss
+
 .issue-detail-container {
+  min-height: 100vh;
+  background: #f5f5f5;
   padding: 24px;
-  max-width: 1000px;
-  margin: 0 auto;
 }
 
-.issue-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-}
-
-.header-left {
+.header {
   display: flex;
   align-items: center;
   gap: 16px;
+  margin-bottom: 24px;
+  padding: 16px 24px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+  }
+
+  .spacer {
+    flex: 1;
+  }
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
 }
 
-.issue-section {
-  margin-bottom: 16px;
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 16px;
+
+  p {
+    color: rgba(0, 0, 0, 0.6);
+  }
 }
 
-.placeholder {
-  color: rgba(0, 0, 0, 0.54);
-  font-style: italic;
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
 }
 
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+// Issue Header Card
+.issue-header-card {
+  mat-card-content {
+    padding: 24px;
+  }
+
+  .issue-id {
+    font-family: monospace;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  .issue-title {
+    margin: 0 0 16px 0;
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .metadata {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    padding-top: 16px;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 14px;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+
+// Description Card
+.description-card {
+  mat-card-header {
+    padding: 16px 24px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  mat-card-content {
+    padding: 24px;
+  }
+
+  .description {
+    color: rgba(0, 0, 0, 0.87);
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+}
+
+// Tabs Card
+.tabs-card {
+  ::ng-deep .mat-mdc-tab-body-content {
+    overflow: visible !important;
+  }
+
+  .tab-content {
+    padding: 24px;
+  }
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+    text-align: center;
+
+    mat-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      color: rgba(0, 0, 0, 0.38);
+      margin-bottom: 16px;
+    }
+
+    p {
+      color: rgba(0, 0, 0, 0.6);
+      margin: 0;
+    }
+  }
+}
+
+// Comments
+.comment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.comment {
+  padding: 16px;
+  background: #f5f5f5;
+  border-radius: 8px;
+
+  .comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+
+    strong {
+      color: rgba(0, 0, 0, 0.87);
+      font-size: 14px;
+    }
+
+    .comment-date {
+      color: rgba(0, 0, 0, 0.6);
+      font-size: 12px;
+    }
+  }
+
+  .comment-content {
+    color: rgba(0, 0, 0, 0.87);
+    line-height: 1.5;
+    white-space: pre-wrap;
+  }
+}
+
+.comment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 24px;
+
+  button {
+    align-self: flex-end;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    mat-spinner {
+      display: inline-block;
+    }
+  }
+}
+
+// Activity List
+.activity-list {
+  mat-list-item {
+    height: auto;
+    min-height: 64px;
+    padding: 16px 0;
+
+    mat-icon[matListItemIcon] {
+      color: #1976d2;
+    }
+
+    [matListItemTitle] {
+      strong {
+        display: inline;
+        margin-right: 4px;
+      }
+
+      span {
+        color: rgba(0, 0, 0, 0.87);
+      }
+    }
+
+    [matListItemLine] {
+      color: rgba(0, 0, 0, 0.6);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+  }
+}
+
+// Sidebar
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.properties-card,
+.actions-card {
+  mat-card-header {
+    padding: 16px 24px;
+    border-bottom: 1px solid #e0e0e0;
+
+    mat-card-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+  }
+
+  mat-card-content {
+    padding: 16px 24px;
+  }
+}
+
+.property {
+  margin-bottom: 20px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  label {
+    display: block;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: rgba(0, 0, 0, 0.87);
+  }
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: space-between;
+    width: 100%;
+    text-align: left;
+  }
+}
+
+// Status Badge
+.status-badge {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+
+  &.status-open {
+    background: #e3f2fd;
+    color: #1976d2;
+    border-color: #1976d2;
+  }
+
+  &.status-in-progress {
+    background: #fff3e0;
+    color: #f57c00;
+    border-color: #f57c00;
+  }
+
+  &.status-closed {
+    background: #e8f5e9;
+    color: #388e3c;
+    border-color: #388e3c;
+  }
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+// Priority Badge
+.priority-badge {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+
+  &.priority-low {
+    background: #f5f5f5;
+    color: #757575;
+    border-color: #757575;
+  }
+
+  &.priority-medium {
+    background: #fff3e0;
+    color: #f57c00;
+    border-color: #f57c00;
+  }
+
+  &.priority-high {
+    background: #ffe0b2;
+    color: #e65100;
+    border-color: #e65100;
+  }
+
+  &.priority-critical {
+    background: #ffebee;
+    color: #c62828;
+    border-color: #c62828;
+  }
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.assignee-info {
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 14px;
+
+  .unassigned {
+    color: rgba(0, 0, 0, 0.38);
+    font-style: italic;
+  }
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  mat-chip {
+    font-size: 12px;
+    min-height: 28px;
+    padding: 4px 12px;
+  }
+
+  .no-tags {
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 14px;
+  }
+}
+
+.actions-card {
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+}
+
+// Utilities
 .full-width {
   width: 100%;
-  margin-bottom: 16px;
 }
 
-.edit-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
+mat-form-field {
+  mat-icon[matPrefix] {
+    margin-right: 8px;
+    color: rgba(0, 0, 0, 0.54);
+  }
 }
 
-.activity-list {
-  list-style: none;
-  padding-left: 0;
+mat-divider {
+  margin: 24px 0;
 }
 
-.activity-list li {
-  margin-bottom: 8px;
+// Responsive Design
+@media (max-width: 768px) {
+  .issue-detail-container {
+    padding: 16px;
+  }
+
+  .header {
+    flex-wrap: wrap;
+    padding: 12px 16px;
+
+    h1 {
+      font-size: 20px;
+      width: 100%;
+      order: 1;
+    }
+
+    button {
+      order: 2;
+      
+      &:first-child {
+        order: 0;
+      }
+    }
+  }
+
+  .content-grid {
+    gap: 16px;
+  }
+
+  .issue-header-card {
+    .issue-title {
+      font-size: 24px;
+    }
+
+    .metadata {
+      flex-direction: column;
+      gap: 12px;
+    }
+  }
+
+  .comment-form {
+    button {
+      width: 100%;
+    }
+  }
 }
 
-.timestamp {
-  color: rgba(0, 0, 0, 0.54);
-  font-size: 12px;
+// Animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+mat-card {
+  animation: fadeIn 0.3s ease-out;
+}
+
+// Loading Spinner
+mat-spinner {
+  display: inline-block;
+  margin: 0;
+
+  ::ng-deep circle {
+    stroke: white;
+  }
+}
+
+// Dark Mode Support
+@media (prefers-color-scheme: dark) {
+  .issue-detail-container {
+    background: #121212;
+  }
+
+  .header {
+    background: #1e1e1e;
+
+    h1 {
+      color: rgba(255, 255, 255, 0.87);
+    }
+  }
+
+  mat-card {
+    background: #1e1e1e;
+  }
+
+  .comment {
+    background: #2c2c2c;
+  }
+
+  .status-badge,
+  .priority-badge {
+    &.status-open,
+    &.status-in-progress,
+    &.status-closed,
+    &.priority-low,
+    &.priority-medium,
+    &.priority-high,
+    &.priority-critical {
+      filter: brightness(0.8);
+    }
+  }
 }

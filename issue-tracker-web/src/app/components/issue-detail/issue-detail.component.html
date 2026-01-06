@@ -1,117 +1,307 @@
+<!-- issue-detail.component.html -->
 <div class="issue-detail-container">
-
   <!-- Header -->
-  <div class="issue-header">
-    <div class="header-left">
-      <button mat-button color="primary" (click)="goBackToList()">
-        ← Back to Issues
-      </button>
-      <h2 *ngIf="issue">Issue #{{ issue.id }}</h2>
-    </div>
-
-    <button
-      mat-raised-button
-      color="primary"
-      *ngIf="!editing"
-      (click)="startEdit()"
-    >
-      Edit Issue
+  <div class="header">
+    <button mat-icon-button (click)="goBack()" [matTooltip]="'Back to issues'">
+      <mat-icon>arrow_back</mat-icon>
     </button>
+    <h1>Issue Details</h1>
+    <div class="spacer"></div>
+    @if (canEdit() && !editMode()) {
+      <button mat-raised-button color="primary" (click)="toggleEditMode()">
+        <mat-icon>edit</mat-icon>
+        Edit
+      </button>
+    }
+    @if (editMode()) {
+      <button mat-button (click)="toggleEditMode()">Cancel</button>
+      <button mat-raised-button color="primary" (click)="saveChanges()">
+        <mat-icon>save</mat-icon>
+        Save
+      </button>
+    }
   </div>
 
-  <p *ngIf="loading">Loading issue...</p>
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="loading-container">
+      <mat-spinner></mat-spinner>
+      <p>Loading issue...</p>
+    </div>
+  }
 
-  <ng-container *ngIf="!loading && issue">
+  <!-- Issue Content -->
+  @if (!loading() && issue()) {
+    <div class="content-grid">
+      
+      <!-- Main Content -->
+      <div class="main-content">
+        
+        <!-- Issue Header Card -->
+        <mat-card class="issue-header-card">
+          <mat-card-content>
+            <div class="issue-id">{{ shortenId(issue()!.id) }}</div>
+            
+            @if (!editMode()) {
+              <h2 class="issue-title">{{ issue()!.title }}</h2>
+            } @else {
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Title</mat-label>
+                <input matInput [formControl]="titleControl">
+                @if (titleControl.invalid && titleControl.touched) {
+                  <mat-error>{{ getErrorMessage('title') }}</mat-error>
+                }
+              </mat-form-field>
+            }
+            
+            <div class="metadata">
+              <div class="meta-item">
+                <mat-icon>person</mat-icon>
+                <span>Reported by {{ issue()!.reporter?.name || 'Unknown' }}</span>
+              </div>
+              <div class="meta-item">
+                <mat-icon>calendar_today</mat-icon>
+                <span>Created {{ formatDate(issue()!.createdAt) }}</span>
+              </div>
+              <div class="meta-item">
+                <mat-icon>update</mat-icon>
+                <span>Updated {{ formatDate(issue()!.updatedAt) }}</span>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
 
-    <!-- VIEW MODE -->
-    <ng-container *ngIf="!editing">
-    <mat-card class="issue-section">
-        <mat-card-title>Activity</mat-card-title>
-        <mat-card-content>
-            <p *ngIf="activities.length === 0" class="placeholder">
-            No activity yet.
-            </p>
+        <!-- Description Card -->
+        <mat-card class="description-card">
+          <mat-card-header>
+            <mat-card-title>Description</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            @if (!editMode()) {
+              <div class="description">{{ issue()!.description }}</div>
+            } @else {
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Description</mat-label>
+                <textarea 
+                  matInput 
+                  [formControl]="descriptionControl"
+                  rows="8"
+                ></textarea>
+                @if (descriptionControl.invalid && descriptionControl.touched) {
+                  <mat-error>{{ getErrorMessage('description') }}</mat-error>
+                }
+              </mat-form-field>
+            }
+          </mat-card-content>
+        </mat-card>
 
-            <ul *ngIf="activities.length > 0" class="activity-list">
-            <li *ngFor="let activity of activities">
-                <span class="timestamp">
-                {{ activity.timestamp | date:'short' }}
-                </span>
-                — {{ activity.message }}
-            </li>
-            </ul>
-        </mat-card-content>
-    </mat-card>
+        <!-- Tabs for Comments and Activity -->
+        <mat-card class="tabs-card">
+          <mat-tab-group>
+            
+            <!-- Comments Tab -->
+            <mat-tab label="Comments">
+              <div class="tab-content">
+                
+                <!-- Comment List -->
+                @if (hasComments()) {
+                  <div class="comment-list">
+                    @for (comment of comments(); track comment.id) {
+                      <div class="comment">
+                        <div class="comment-header">
+                          <strong>{{ comment.user?.name || 'Unknown' }}</strong>
+                          <span class="comment-date">{{ formatDate(comment.createdAt) }}</span>
+                        </div>
+                        <div class="comment-content">{{ comment.content }}</div>
+                      </div>
+                    }
+                  </div>
+                } @else {
+                  <div class="empty-state">
+                    <mat-icon>comment</mat-icon>
+                    <p>No comments yet. Be the first to comment!</p>
+                  </div>
+                }
 
-      <mat-card class="issue-section">
-        <mat-card-title>Details</mat-card-title>
-        <mat-card-content>
-          <p><strong>Title:</strong> {{ issue.title }}</p>
-          <p><strong>Status:</strong> {{ issue.status }}</p>
-          <p><strong>Priority:</strong> {{ issue.priority }}</p>
-          <p><strong>Assignee:</strong> {{ issue.assigneeId ?? '—' }}</p>
-          <p><strong>Updated:</strong> {{ issue.updatedAt }}</p>
-        </mat-card-content>
-      </mat-card>
+                <!-- Add Comment Form -->
+                <mat-divider></mat-divider>
+                <form [formGroup]="commentForm" (ngSubmit)="addComment()" class="comment-form">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Add a comment</mat-label>
+                    <textarea 
+                      matInput 
+                      [formControl]="contentControl"
+                      rows="3"
+                      placeholder="Share your thoughts..."
+                    ></textarea>
+                  </mat-form-field>
+                  <button 
+                    mat-raised-button 
+                    color="primary" 
+                    type="submit"
+                    [disabled]="commentForm.invalid || submittingComment()"
+                  >
+                    @if (submittingComment()) {
+                      <mat-spinner diameter="20"></mat-spinner>
+                      <span>Adding...</span>
+                    } @else {
+                      <mat-icon>send</mat-icon>
+                      <span>Add Comment</span>
+                    }
+                  </button>
+                </form>
+              </div>
+            </mat-tab>
 
-      <mat-card class="issue-section">
-        <mat-card-title>Description</mat-card-title>
-        <mat-card-content>
-          <p>{{ issue.description || 'No description provided.' }}</p>
-        </mat-card-content>
-      </mat-card>
-    </ng-container>
+            <!-- Activity Tab -->
+            <mat-tab label="Activity">
+              <div class="tab-content">
+                @if (hasActivities()) {
+                  <mat-list class="activity-list">
+                    @for (activity of activities(); track activity.id) {
+                      <mat-list-item>
+                        <mat-icon matListItemIcon>{{ getActivityIcon(activity.action) }}</mat-icon>
+                        <div matListItemTitle>
+                          <strong>{{ activity.user?.name || 'Unknown' }}</strong>
+                          <span>{{ formatActivity(activity) }}</span>
+                        </div>
+                        <div matListItemLine>{{ formatDate(activity.createdAt) }}</div>
+                      </mat-list-item>
+                      <mat-divider></mat-divider>
+                    }
+                  </mat-list>
+                } @else {
+                  <div class="empty-state">
+                    <mat-icon>history</mat-icon>
+                    <p>No activity recorded yet</p>
+                  </div>
+                }
+              </div>
+            </mat-tab>
 
-    <!-- EDIT MODE -->
-    <form *ngIf="editing" [formGroup]="form">
-      <mat-card class="issue-section">
-        <mat-card-title>Edit Issue</mat-card-title>
-        <mat-card-content>
+          </mat-tab-group>
+        </mat-card>
 
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Title</mat-label>
-            <input matInput formControlName="title" />
-          </mat-form-field>
+      </div>
 
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Description</mat-label>
-            <textarea matInput rows="4" formControlName="description"></textarea>
-          </mat-form-field>
+      <!-- Sidebar -->
+      <div class="sidebar">
+        
+        <!-- Properties Card -->
+        <mat-card class="properties-card">
+          <mat-card-header>
+            <mat-card-title>Properties</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            
+            <!-- Status -->
+            <div class="property">
+              <label>Status</label>
+              @if (!editMode()) {
+                <button 
+                  mat-stroked-button 
+                  [matMenuTriggerFor]="statusMenu"
+                  [class]="'status-badge status-' + getStatusConfig(issue()!.status)?.color"
+                >
+                  <mat-icon>{{ getStatusConfig(issue()!.status)?.icon }}</mat-icon>
+                  <span>{{ getStatusConfig(issue()!.status)?.label }}</span>
+                  <mat-icon>arrow_drop_down</mat-icon>
+                </button>
+                <mat-menu #statusMenu="matMenu">
+                  @for (status of statusOptions; track status.value) {
+                    <button mat-menu-item (click)="updateStatus(status.value)">
+                      <mat-icon>{{ status.icon }}</mat-icon>
+                      <span>{{ status.label }}</span>
+                    </button>
+                  }
+                </mat-menu>
+              } @else {
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-select [formControl]="statusControl">
+                    @for (status of statusOptions; track status.value) {
+                      <mat-option [value]="status.value">{{ status.label }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              }
+            </div>
 
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Status</mat-label>
-            <mat-select formControlName="status">
-              <mat-option *ngFor="let s of statuses" [value]="s">
-                {{ s }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+            <!-- Priority -->
+            <div class="property">
+              <label>Priority</label>
+              @if (!editMode()) {
+                <button 
+                  mat-stroked-button 
+                  [matMenuTriggerFor]="priorityMenu"
+                  [class]="'priority-badge priority-' + getPriorityConfig(issue()!.priority)?.color"
+                >
+                  <mat-icon>{{ getPriorityConfig(issue()!.priority)?.icon }}</mat-icon>
+                  <span>{{ getPriorityConfig(issue()!.priority)?.label }}</span>
+                  <mat-icon>arrow_drop_down</mat-icon>
+                </button>
+                <mat-menu #priorityMenu="matMenu">
+                  @for (priority of priorityOptions; track priority.value) {
+                    <button mat-menu-item (click)="updatePriority(priority.value)">
+                      <mat-icon>{{ priority.icon }}</mat-icon>
+                      <span>{{ priority.label }}</span>
+                    </button>
+                  }
+                </mat-menu>
+              } @else {
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-select [formControl]="priorityControl">
+                    @for (priority of priorityOptions; track priority.value) {
+                      <mat-option [value]="priority.value">{{ priority.label }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              }
+            </div>
 
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Priority</mat-label>
-            <input matInput type="number" formControlName="priority" />
-          </mat-form-field>
+            <!-- Assignee -->
+            <div class="property">
+              <label>Assignee</label>
+              <div class="assignee-info">
+                @if (issue()!.assignee) {
+                  <span>{{ issue()!.assignee!.name }}</span>
+                } @else {
+                  <span class="unassigned">Unassigned</span>
+                }
+              </div>
+            </div>
 
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Assignee ID</mat-label>
-            <input matInput type="number" formControlName="assigneeId" />
-          </mat-form-field>
+            <!-- Tags -->
+            <div class="property">
+              <label>Tags</label>
+              <div class="tags">
+                @if (issue()!.tags && issue()!.tags.length > 0) {
+                  @for (tag of issue()!.tags; track tag) {
+                    <mat-chip>{{ tag }}</mat-chip>
+                  }
+                } @else {
+                  <span class="no-tags">No tags</span>
+                }
+              </div>
+            </div>
 
-          <div class="edit-actions">
-            <button mat-button (click)="cancelEdit()">Cancel</button>
-            <button
-              mat-raised-button
-              color="primary"
-              (click)="save()"
-            >
-              Save
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Actions Card -->
+        <mat-card class="actions-card">
+          <mat-card-header>
+            <mat-card-title>Actions</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <button mat-stroked-button color="warn" (click)="deleteIssue()" class="full-width">
+              <mat-icon>delete</mat-icon>
+              Delete Issue
             </button>
-          </div>
+          </mat-card-content>
+        </mat-card>
 
-        </mat-card-content>
-      </mat-card>
-    </form>
+      </div>
 
-  </ng-container>
-
+    </div>
+  }
 </div>

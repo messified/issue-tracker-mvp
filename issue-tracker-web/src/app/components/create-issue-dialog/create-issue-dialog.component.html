@@ -1,0 +1,140 @@
+<h2 mat-dialog-title>
+  <mat-icon class="title-icon">bug_report</mat-icon>
+  Create New Issue
+</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="issueForm" class="issue-form">
+    
+    <!-- Title Field -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Title</mat-label>
+      <input 
+        matInput 
+        formControlName="title"
+        placeholder="Brief description of the issue"
+        maxlength="200"
+        required
+      >
+      <mat-icon matPrefix>title</mat-icon>
+      <mat-hint align="end">
+        {{ getRemainingChars('title', 200) }} characters remaining
+      </mat-hint>
+      @if (hasError('title')) {
+        <mat-error>{{ getErrorMessage('title') }}</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Description Field -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Description</mat-label>
+      <textarea 
+        matInput 
+        formControlName="description"
+        rows="6"
+        placeholder="Detailed description of the issue..."
+        maxlength="5000"
+        required
+      ></textarea>
+      <mat-icon matPrefix>description</mat-icon>
+      <mat-hint align="end">
+        {{ getRemainingChars('description', 5000) }} characters remaining
+      </mat-hint>
+      @if (hasError('description')) {
+        <mat-error>{{ getErrorMessage('description') }}</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Priority Field -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Priority</mat-label>
+      <mat-select formControlName="priority" required>
+        @for (priority of priorities; track priority.value) {
+          <mat-option [value]="priority.value">
+            <div class="priority-option" [attr.data-priority]="priority.color">
+              <mat-icon>{{ priority.icon }}</mat-icon>
+              <span>{{ priority.label }}</span>
+            </div>
+          </mat-option>
+        }
+      </mat-select>
+      <mat-icon matPrefix>{{ getPriorityIcon(issueForm.get('priority')?.value) }}</mat-icon>
+      @if (hasError('priority')) {
+        <mat-error>{{ getErrorMessage('priority') }}</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Tags Field -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Tags</mat-label>
+      <mat-chip-grid #chipGrid aria-label="Issue tags">
+        @for (tag of tags(); track tag) {
+          <mat-chip-row 
+            (removed)="removeTag(tag)"
+            [editable]="false"
+          >
+            {{ tag }}
+            <button matChipRemove [attr.aria-label]="'Remove ' + tag">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip-row>
+        }
+      </mat-chip-grid>
+      <input 
+        placeholder="Add tags (press Enter)..."
+        [matChipInputFor]="chipGrid"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        (matChipInputTokenEnd)="addTag($event)"
+        maxlength="30"
+      >
+      <mat-icon matPrefix>label</mat-icon>
+      <mat-hint>
+        @if (tags().length < 10) {
+          Press Enter or comma to add tags ({{ tags().length }}/10)
+        } @else {
+          Maximum tags reached (10/10)
+        }
+      </mat-hint>
+    </mat-form-field>
+
+    <!-- Info Box -->
+    <div class="info-box">
+      <mat-icon>info</mat-icon>
+      <div class="info-content">
+        <strong>Quick Tips:</strong>
+        <ul>
+          <li>Write a clear, concise title</li>
+          <li>Include steps to reproduce in description</li>
+          <li>Add relevant tags for easy filtering</li>
+          <li>Set appropriate priority level</li>
+        </ul>
+      </div>
+    </div>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button 
+    mat-button 
+    (click)="onCancel()"
+    [disabled]="loading()"
+  >
+    Cancel
+  </button>
+  <button 
+    mat-raised-button 
+    color="primary" 
+    (click)="onCreate()"
+    [disabled]="issueForm.invalid || loading()"
+    class="create-button"
+  >
+    @if (loading()) {
+      <mat-spinner diameter="20"></mat-spinner>
+      <span>Creating...</span>
+    } @else {
+      <mat-icon>add</mat-icon>
+      <span>Create Issue</span>
+    }
+  </button>
+</mat-dialog-actions>
