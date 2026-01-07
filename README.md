@@ -101,7 +101,7 @@ cd issue-tracker-mvp
 Start PostgreSQL using Docker Compose:
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 This will:
