@@ -1,34 +1,117 @@
 <div class="login-container">
-
   <mat-card class="login-card">
-    <mat-card-title>Sign In</mat-card-title>
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>bug_report</mat-icon>
+        Issue Tracker
+      </mat-card-title>
+    </mat-card-header>
 
-    <form [formGroup]="loginForm" (ngSubmit)="submit()">
+    <mat-card-content>
+      <mat-tab-group [(selectedIndex)]="selectedTabIndex" (selectedIndexChange)="selectedTabIndex.set($event)">
+        
+        <!-- Sign In Tab -->
+        <mat-tab label="Sign In">
+          <form [formGroup]="loginForm" (ngSubmit)="submit()" class="auth-form">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Email</mat-label>
+              <input matInput formControlName="email" type="email" />
+              <mat-icon matPrefix>email</mat-icon>
+              @if (hasError(loginForm, 'email')) {
+                <mat-error>{{ getErrorMessage(loginForm, 'email') }}</mat-error>
+              }
+            </mat-form-field>
 
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Email</mat-label>
-        <input matInput formControlName="email" />
-        <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
-          Enter a valid email
-        </mat-error>
-      </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Password</mat-label>
+              <input matInput type="password" formControlName="password" />
+              <mat-icon matPrefix>lock</mat-icon>
+              @if (hasError(loginForm, 'password')) {
+                <mat-error>{{ getErrorMessage(loginForm, 'password') }}</mat-error>
+              }
+            </mat-form-field>
 
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Password</mat-label>
-        <input matInput type="password" formControlName="password" />
-      </mat-form-field>
+            <button
+              mat-raised-button
+              color="primary"
+              class="full-width submit-button"
+              type="submit"
+              [disabled]="loginForm.invalid || loading()"
+            >
+              @if (loading()) {
+                <mat-spinner diameter="20"></mat-spinner>
+                <span>Signing in...</span>
+              } @else {
+                <ng-container>
+                  <mat-icon>login</mat-icon>
+                  <span>Sign In</span>
+                </ng-container>
+              }
+            </button>
+          </form>
+        </mat-tab>
 
-      <button
-        mat-raised-button
-        color="primary"
-        class="full-width"
-        type="submit"
-        [disabled]="loginForm.invalid"
-      >
-        Login
-      </button>
+        <!-- Sign Up Tab -->
+        <mat-tab label="Sign Up">
+          <form [formGroup]="signUpForm" (ngSubmit)="submit()" class="auth-form">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Full Name</mat-label>
+              <input matInput formControlName="name" />
+              <mat-icon matPrefix>person</mat-icon>
+              @if (hasError(signUpForm, 'name')) {
+                <mat-error>{{ getErrorMessage(signUpForm, 'name') }}</mat-error>
+              }
+            </mat-form-field>
 
-    </form>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Email</mat-label>
+              <input matInput formControlName="email" type="email" />
+              <mat-icon matPrefix>email</mat-icon>
+              @if (hasError(signUpForm, 'email')) {
+                <mat-error>{{ getErrorMessage(signUpForm, 'email') }}</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Password</mat-label>
+              <input matInput type="password" formControlName="password" />
+              <mat-icon matPrefix>lock</mat-icon>
+              <mat-hint>At least 6 characters</mat-hint>
+              @if (hasError(signUpForm, 'password')) {
+                <mat-error>{{ getErrorMessage(signUpForm, 'password') }}</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Confirm Password</mat-label>
+              <input matInput type="password" formControlName="confirmPassword" />
+              <mat-icon matPrefix>lock_outline</mat-icon>
+              @if (hasError(signUpForm, 'confirmPassword')) {
+                <mat-error>{{ getErrorMessage(signUpForm, 'confirmPassword') }}</mat-error>
+              }
+            </mat-form-field>
+
+            <button
+              mat-raised-button
+              color="primary"
+              class="full-width submit-button"
+              type="submit"
+              [disabled]="signUpForm.invalid || loading()"
+            >
+              @if (loading()) {
+                <mat-spinner diameter="20"></mat-spinner>
+                <span>Creating account...</span>
+              } @else {
+                <ng-container>
+                  <mat-icon>person_add</mat-icon>
+                  <span>Sign Up</span>
+                </ng-container>
+              }
+            </button>
+          </form>
+        </mat-tab>
+
+      </mat-tab-group>
+    </mat-card-content>
   </mat-card>
-
 </div>

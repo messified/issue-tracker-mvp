@@ -15,6 +15,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatListModule } from '@angular/material/list';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { Subject, takeUntil } from 'rxjs';
 
 import { IssueService } from '../../services/issue.service';
@@ -46,7 +47,8 @@ import { WebSocketMessageType } from '../../models/websocket.model';
     MatMenuModule,
     MatSnackBarModule,
     MatTabsModule,
-    MatListModule
+    MatListModule,
+    MatFormFieldModule
   ],
   templateUrl: './issue-detail.component.html',
   styleUrl: './issue-detail.component.scss'
@@ -110,9 +112,11 @@ export class IssueDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // Get IDs from route
+    // Get IDs from route - handle both nested and flat routes
     this.issueId = this.route.snapshot.paramMap.get('issueId') || this.route.snapshot.paramMap.get('id')!;
-    this.projectId = this.route.snapshot.paramMap.get('projectId') || this.route.parent?.snapshot.paramMap.get('id')!;
+    this.projectId = this.route.snapshot.paramMap.get('projectId') 
+      || this.route.parent?.snapshot.paramMap.get('id')
+      || this.route.parent?.parent?.snapshot.paramMap.get('id')!;
     
     if (!this.issueId) {
       console.error('No issueId found in route');
@@ -408,7 +412,7 @@ export class IssueDetailComponent implements OnInit, OnDestroy {
    */
   goBack(): void {
     if (this.projectId) {
-      this.router.navigate(['/projects', this.projectId]);
+      this.router.navigate(['/projects', this.projectId, 'issues']);
     } else {
       this.router.navigate(['/projects']);
     }

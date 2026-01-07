@@ -31,7 +31,7 @@
         <span class="spacer"></span>
 
         <mat-icon>account_circle</mat-icon>
-        <span class="active-user">Active User</span>
+        <span class="active-user">{{ user()?.name || user()?.email || 'User' }}</span>
 
         <button
             mat-button

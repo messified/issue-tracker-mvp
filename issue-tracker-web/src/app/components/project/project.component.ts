@@ -14,10 +14,12 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { ProjectService } from '../../services/project.service';
 import { Project } from '../../models/project.model';
 import { PaginationParams } from '../../models/pagination.model';
+import { CreateProjectDialogComponent } from '../create-project-dialog/create-project-dialog.component';
 
 @Component({
   selector: 'app-project',
@@ -34,7 +36,8 @@ import { PaginationParams } from '../../models/pagination.model';
     MatProgressSpinnerModule,
     MatCardModule,
     MatTooltipModule,
-    MatChipsModule
+    MatChipsModule,
+    MatDialogModule
   ],
   templateUrl: './project.component.html',
   styleUrl: './project.component.scss'
@@ -68,7 +71,8 @@ export class ProjectComponent implements OnInit {
 
   constructor(
     private projectService: ProjectService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -149,17 +153,23 @@ export class ProjectComponent implements OnInit {
    * Navigate to project detail view
    */
   viewProject(project: Project): void {
-    this.router.navigate(['/projects', project.id]);
+    this.router.navigate(['/projects', project.id, 'issues']);
   }
 
   /**
    * Create new project
    */
   createProject(): void {
-    // This would typically open a dialog
-    // For now, navigate to create page or open dialog
-    console.log('Create project clicked');
-    // TODO: Implement create project dialog
+    const dialogRef = this.dialog.open(CreateProjectDialogComponent, {
+      width: '600px',
+      data: {}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadProjects();
+      }
+    });
   }
 
   /**
@@ -167,8 +177,17 @@ export class ProjectComponent implements OnInit {
    */
   editProject(project: Project, event: Event): void {
     event.stopPropagation(); // Prevent row click
-    console.log('Edit project:', project);
-    // TODO: Implement edit project dialog
+    
+    const dialogRef = this.dialog.open(CreateProjectDialogComponent, {
+      width: '600px',
+      data: { project }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadProjects();
+      }
+    });
   }
 
   /**

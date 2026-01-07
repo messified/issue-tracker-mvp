@@ -55,9 +55,10 @@ export class WebSocketService implements OnDestroy {
     }
 
     // Build WebSocket URL with token
-    const wsUrl = `http://localhost:8080/ws/?token=${encodeURIComponent(token)}`;
+    // Convert http to ws for WebSocket protocol
+    const wsUrl = `ws://localhost:8080/ws?token=${encodeURIComponent(token)}`;
     
-    console.log('[WebSocket] Connecting to: http://localhost:8080/ws');
+    console.log('[WebSocket] Connecting to: ws://localhost:8080/ws');
 
     this.socket$ = webSocket<WebSocketMessage>({
       url: wsUrl,

@@ -1,40 +1,87 @@
 .layout-container {
   height: 100vh;
+  background: #f5f5f5;
 }
 
 .layout-sidenav {
-  width: 220px;
+  width: 260px;
   padding-top: 8px;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
 }
 
 .sidenav-title {
-  padding: 16px;
+  padding: 20px 16px;
   margin: 0;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 20px;
+  color: rgba(0, 0, 0, 0.87);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  mat-icon {
+    color: #1976d2;
+  }
+}
+
+mat-nav-list {
+  padding-top: 8px;
+
+  a {
+    margin: 4px 8px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.04);
+    }
+
+    &.active {
+      background: rgba(25, 118, 210, 0.12);
+      color: #1976d2;
+      font-weight: 500;
+
+      mat-icon {
+        color: #1976d2;
+      }
+    }
+
+    mat-icon {
+      margin-right: 12px;
+    }
+  }
 }
 
 .layout-toolbar {
   position: sticky;
   top: 0;
   z-index: 2;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  .app-title {
+    font-weight: 600;
+    font-size: 20px;
+  }
+
+  .spacer {
+    flex: 1 1 auto;
+  }
+
+  .active-user {
+    margin-left: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+  }
+
+  .logout-button {
+    margin-left: 12px;
+  }
 }
 
 .layout-content {
-  padding: 16px;
-}
-
-.spacer {
-  flex: 1 1 auto;
-}
-
-.active-user {
-  margin-left: 8px;
-}
-
-a.active {
-  background: rgba(0, 0, 0, 0.08);
-}
-
-.logout-button {
-  margin-left: 12px;
+  padding: 0;
+  min-height: calc(100vh - 64px);
 }

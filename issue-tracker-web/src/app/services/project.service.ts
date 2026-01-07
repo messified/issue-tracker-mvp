@@ -8,13 +8,14 @@ import {
   ProjectMember 
 } from '../models/project.model';
 import { PaginatedResponse, PaginationParams } from '../models/pagination.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectService {
   // Use environment variable instead of hardcoded URL
-  private readonly apiUrl = `http:/localhost:8080/api/projects`;
+  private readonly apiUrl = `${environment.apiUrl}/projects`;
 
   constructor(private http: HttpClient) {}
 

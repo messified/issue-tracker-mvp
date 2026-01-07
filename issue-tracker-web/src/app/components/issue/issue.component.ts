@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, signal, computed, effect } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -54,11 +54,13 @@ import { CreateIssueDialogComponent } from '../create-issue-dialog/create-issue-
   styleUrl: './issue.component.scss'
 })
 export class IssueComponent implements OnInit, OnDestroy {
+  @Input() projectId?: string; // Allow projectId as input for project detail view
+  
   // Signals for reactive state
   issues = signal<Issue[]>([]);
   loading = signal(false);
   totalIssues = signal(0);
-  projectId = signal<string>('');
+  projectIdSignal = signal<string>('');
   
   // Pagination state
   currentPage = signal(0);
@@ -131,28 +133,21 @@ export class IssueComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private dialog: MatDialog
-  ) {
-    // Get projectId from route params
-    effect(() => {
-      const projectId = this.route.snapshot.paramMap.get('projectId');
-      if (projectId) {
-        this.projectId.set(projectId);
-      }
-    });
-  }
+  ) {}
 
   ngOnInit(): void {
-    // Get projectId from route
-    const projectId = this.route.snapshot.paramMap.get('projectId') 
+    // Get projectId from input, route param, or parent route
+    const projectId = this.projectId 
+      || this.route.snapshot.paramMap.get('projectId')
       || this.route.parent?.snapshot.paramMap.get('id');
     
     if (projectId) {
-      this.projectId.set(projectId);
+      this.projectIdSignal.set(projectId);
       this.setupSearch();
       this.setupWebSocket();
       this.loadIssues();
     } else {
-      console.error('No projectId found in route');
+      console.error('No projectId found');
     }
   }
 
@@ -191,7 +186,7 @@ export class IssueComponent implements OnInit, OnDestroy {
           message.type === WebSocketMessageType.ISSUE_UPDATED ||
           message.type === WebSocketMessageType.ISSUE_DELETED
         ) {
-          if (message.payload.projectId === this.projectId()) {
+          if (message.payload.projectId === this.projectIdSignal()) {
             this.loadIssues();
           }
         }
@@ -202,12 +197,12 @@ export class IssueComponent implements OnInit, OnDestroy {
    * Load issues with server-side pagination and filtering (per spec)
    */
   loadIssues(): void {
-    if (!this.projectId()) return;
+    if (!this.projectIdSignal()) return;
 
     this.loading.set(true);
 
     this.issueService.getIssues(
-      this.projectId(),
+      this.projectIdSignal(),
       this.filters(),
       {
         page: this.currentPage() + 1, // Backend expects 1-indexed
@@ -292,7 +287,7 @@ export class IssueComponent implements OnInit, OnDestroy {
   openCreateDialog(): void {
     const dialogRef = this.dialog.open(CreateIssueDialogComponent, {
       width: '600px',
-      data: { projectId: this.projectId() }
+      data: { projectId: this.projectIdSignal() }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -306,7 +301,12 @@ export class IssueComponent implements OnInit, OnDestroy {
    * Navigate to issue detail view
    */
   viewIssue(issue: Issue): void {
-    this.router.navigate(['/projects', this.projectId(), 'issues', issue.id]);
+    const projectId = this.projectIdSignal();
+    if (projectId) {
+      this.router.navigate(['/projects', projectId, 'issues', issue.id]);
+    } else {
+      this.router.navigate(['/issues', issue.id]);
+    }
   }
 
   /**

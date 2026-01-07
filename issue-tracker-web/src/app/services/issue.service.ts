@@ -10,13 +10,14 @@ import {
   IssueActivity
 } from '../models/issue.model';
 import { PaginatedResponse, PaginationParams } from '../models/pagination.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class IssueService {
   // Use environment variable for API URL
-  private readonly apiUrl = `http:/localhost:8080/api/issues`;
+  private readonly apiUrl = `${environment.apiUrl}/issues`;
 
   constructor(private http: HttpClient) {}
 

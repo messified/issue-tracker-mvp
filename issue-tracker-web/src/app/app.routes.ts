@@ -14,6 +14,25 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: 'projects', component: ProjectComponent },
+      {
+        path: 'projects/:id',
+        loadComponent: () =>
+          import('./components/project-detail/project-detail.component')
+            .then(m => m.ProjectDetailComponent),
+        children: [
+          {
+            path: 'issues',
+            component: IssueComponent
+          },
+          {
+            path: 'issues/:issueId',
+            loadComponent: () =>
+              import('./components/issue-detail/issue-detail.component')
+                .then(m => m.IssueDetailComponent)
+          },
+          { path: '', redirectTo: 'issues', pathMatch: 'full' }
+        ]
+      },
       { path: 'issues', component: IssueComponent },
       {
         path: 'issues/:id',
