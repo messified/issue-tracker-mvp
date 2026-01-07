@@ -1,0 +1,73 @@
+<h2 mat-dialog-title>
+  <mat-icon class="title-icon">{{ isEditMode ? 'edit' : 'add' }}</mat-icon>
+  {{ isEditMode ? 'Edit Project' : 'Create New Project' }}
+</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="projectForm" class="project-form">
+    
+    <!-- Name Field -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Project Name</mat-label>
+      <input 
+        matInput 
+        formControlName="name"
+        placeholder="Enter project name"
+        maxlength="100"
+        required
+      >
+      <mat-icon matPrefix>folder</mat-icon>
+      <mat-hint align="end">
+        {{ getRemainingChars('name', 100) }} characters remaining
+      </mat-hint>
+      @if (hasError('name')) {
+        <mat-error>{{ getErrorMessage('name') }}</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Description Field -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Description (Optional)</mat-label>
+      <textarea 
+        matInput 
+        formControlName="description"
+        rows="4"
+        placeholder="Brief description of the project..."
+        maxlength="500"
+      ></textarea>
+      <mat-icon matPrefix>description</mat-icon>
+      <mat-hint align="end">
+        {{ getRemainingChars('description', 500) }} characters remaining
+      </mat-hint>
+      @if (hasError('description')) {
+        <mat-error>{{ getErrorMessage('description') }}</mat-error>
+      }
+    </mat-form-field>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button 
+    mat-button 
+    (click)="onCancel()"
+    [disabled]="loading()"
+  >
+    Cancel
+  </button>
+  <button 
+    mat-raised-button 
+    color="primary" 
+    (click)="onSubmit()"
+    [disabled]="projectForm.invalid || loading()"
+    class="submit-button"
+  >
+    @if (loading()) {
+      <mat-spinner diameter="20"></mat-spinner>
+      <span>{{ isEditMode ? 'Updating...' : 'Creating...' }}</span>
+    } @else {
+      <mat-icon>{{ isEditMode ? 'save' : 'add' }}</mat-icon>
+      <span>{{ isEditMode ? 'Update Project' : 'Create Project' }}</span>
+    }
+  </button>
+</mat-dialog-actions>

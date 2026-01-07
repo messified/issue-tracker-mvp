@@ -1,0 +1,26 @@
+.title-icon {
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+.project-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 400px;
+  max-width: 600px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.submit-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+mat-spinner {
+  display: inline-block;
+}

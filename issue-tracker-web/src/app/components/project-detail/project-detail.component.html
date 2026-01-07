@@ -1,0 +1,103 @@
+<div class="project-detail-container">
+  <!-- Header -->
+  <div class="header">
+    <button mat-icon-button (click)="goBack()" [matTooltip]="'Back to projects'">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>Project Details</h1>
+    <div class="spacer"></div>
+    @if (project() && !loading()) {
+      <button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="editProject()">
+          <mat-icon>edit</mat-icon>
+          <span>Edit Project</span>
+        </button>
+        <button mat-menu-item (click)="deleteProject()" class="delete-action">
+          <mat-icon>delete</mat-icon>
+          <span>Delete Project</span>
+        </button>
+      </mat-menu>
+    }
+  </div>
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="loading-container">
+      <mat-spinner></mat-spinner>
+      <p>Loading project...</p>
+    </div>
+  }
+
+  <!-- Project Content -->
+  @if (!loading() && project()) {
+    <div class="content">
+      
+      <!-- Project Info Card -->
+      <mat-card class="project-info-card">
+        <mat-card-content>
+          <div class="project-header">
+            <div>
+              <h2 class="project-name">{{ project()!.name }}</h2>
+              @if (project()!.description) {
+                <p class="project-description">{{ project()!.description }}</p>
+              }
+            </div>
+          </div>
+          
+          <mat-divider></mat-divider>
+          
+          <div class="project-metadata">
+            <div class="metadata-item">
+              <mat-icon>person</mat-icon>
+              <div>
+                <span class="label">Owner</span>
+                <span class="value">{{ project()!.owner?.name || 'Unknown' }}</span>
+              </div>
+            </div>
+            
+            <div class="metadata-item">
+              <mat-icon>bug_report</mat-icon>
+              <div>
+                <span class="label">Issues</span>
+                <mat-chip>{{ project()!.issueCount || 0 }}</mat-chip>
+              </div>
+            </div>
+            
+            <div class="metadata-item">
+              <mat-icon>people</mat-icon>
+              <div>
+                <span class="label">Members</span>
+                <mat-chip>{{ project()!.memberCount || 1 }}</mat-chip>
+              </div>
+            </div>
+            
+            <div class="metadata-item">
+              <mat-icon>calendar_today</mat-icon>
+              <div>
+                <span class="label">Created</span>
+                <span class="value">{{ formatDate(project()!.createdAt) }}</span>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Issues Section -->
+      <mat-card class="issues-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>bug_report</mat-icon>
+            Issues
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <app-issue [projectId]="projectId"></app-issue>
+        </mat-card-content>
+      </mat-card>
+
+    </div>
+  }
+</div>
